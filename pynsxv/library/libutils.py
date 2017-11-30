@@ -228,6 +228,12 @@ def get_vdsportgroupid(content, switch_name):
     else:
         return None
 
+def get_networkid(content, switch_name):
+    network_mo = get_mo_by_name(content, switch_name, VIM_TYPES['portgroup'])
+    if network_mo:
+        return str(network_mo._moId)
+    else:
+        return None
 
 def get_vm_by_name(content, vm_name):
     vm_mo = get_mo_by_name(content, vm_name, VIM_TYPES['vm'])

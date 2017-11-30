@@ -28,7 +28,7 @@ import argparse
 import ConfigParser
 import json
 from libutils import get_logical_switch, get_vdsportgroupid, connect_to_vc, check_for_parameters
-from libutils import get_datacentermoid, get_edgeresourcepoolmoid, get_edge, get_datastoremoid
+from libutils import get_datacentermoid, get_edgeresourcepoolmoid, get_edge, get_datastoremoid, get_networkid
 from tabulate import tabulate
 from nsxramlclient.client import NsxClient
 from argparse import RawTextHelpFormatter
@@ -91,7 +91,7 @@ def _esg_create(client_session, vccontent, **kwargs):
     datacentermoid = get_datacentermoid(vccontent, kwargs['datacenter_name'])
     datastoremoid = get_datastoremoid(vccontent, kwargs['edge_datastore'])
     resourcepoolid = get_edgeresourcepoolmoid(vccontent, kwargs['edge_cluster'])
-    portgroupmoid = get_vdsportgroupid(vccontent, kwargs['portgroup'])
+    portgroupmoid = get_networkid(vccontent, kwargs['portgroup'])
 
     esg_id, esg_params = esg_create(client_session, kwargs['esg_name'], kwargs['esg_pwd'], kwargs['esg_size'],
                                     datacentermoid, datastoremoid, resourcepoolid, portgroupmoid,
