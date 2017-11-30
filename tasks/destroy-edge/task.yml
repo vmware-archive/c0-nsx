@@ -7,7 +7,7 @@ image_resource:
   source: {repository: nsxedgegen/nsx-edge-gen-worker}
 
 inputs:
-  - name: nsx-edge-gen
+  - name: pynsxv
 
 run:
   path: pynsxv/tasks/destroy-edge/task.sh
