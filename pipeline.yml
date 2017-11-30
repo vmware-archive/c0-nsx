@@ -61,8 +61,8 @@ resources:
 - name: pynsxv
   type: git
   source:
-    uri: git@github.com:pivotal-cf/pynsxv.git
-    branch: master
+    uri: git@github.com:pivotal-cf/c0-nsx.git
+    branch: pynsxv 
     private_key: {{git_private_key}}
 
 jobs:
