@@ -95,8 +95,8 @@ def get_scope(client_session, transport_zone_name):
     try:
         vdn_scopes = client_session.read('vdnScopes', 'read')['body']
         vdn_scope_list = client_session.normalize_list_return(vdn_scopes['vdnScopes'])
-        vdn_scope = [scope['vdnScope'] for scope in vdn_scope_list
-                     if scope['vdnScope']['name'] == transport_zone_name][0]
+        vdn_scope = [scope for scope in vdn_scope_list[0]['vdnScope']
+                     if scope['name'] == transport_zone_name][0]
     except KeyError:
         return None, None
 
