@@ -23,14 +23,11 @@ EOF
 pushd pynsxv
 alias pynsxv="python pynsxv/cli.py"
 
-LABWIRES="
-  labwire-proto-01
-  labwire-proto-02
-"
+LABWIRES="labwire-proto-01 labwire-proto-02"
 
 
 for labwire in $LABWIRES; do
-  pynsxv lswitch -n $labwire
+  pynsxv lswitch -n $labwire create
 done
 
 pynsxv esg create -n $NSX_EDGE_GEN_NAME -pg "$ESG_DEFAULT_UPLINK_PG_1"
