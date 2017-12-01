@@ -23,7 +23,7 @@ EOF
 pushd pynsxv
 
 pynsxv_local() {
-  python pynsxv/cli.py $@
+  python pynsxv/cli.py "$@"
 }
 
 LABWIRES="labwire-proto-01 labwire-proto-02"
