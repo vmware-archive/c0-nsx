@@ -24,6 +24,7 @@ pushd pynsxv
 
 pynsxv_local() {
   python pynsxv/cli.py "$@"
+  return $?
 }
 
 get_cidr() {
