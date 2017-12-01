@@ -21,7 +21,10 @@ edge_cluster = $NSX_EDGE_GEN_EDGE_CLUSTER
 EOF
 
 pushd pynsxv
-alias pynsxv_local="python pynsxv/cli.py"
+
+pynsxv_local() {
+  python pynsxv/cli.py $@
+}
 
 LABWIRES="labwire-proto-01 labwire-proto-02"
 
