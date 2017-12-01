@@ -46,7 +46,7 @@ pynsxv_local esg cfg_interface -n $NSX_EDGE_GEN_NAME --logical_switch my-test-sw
 # Configure firewall + default gw + static route
 pynsxv_local esg set_fw_status -n $NSX_EDGE_GEN_NAME --fw_default accept
 
-pynsxv_local esg set_dgw -n $NSX_EDGE_GEN_NAME --next_hop $ESG_DEFAULT_UPLINK_PG_1
+pynsxv_local esg set_dgw -n $NSX_EDGE_GEN_NAME --next_hop "$ESG_DEFAULT_UPLINK_PG_1"
 
 pynsxv_local esg add_route -n $NSX_EDGE_GEN_NAME --route_net 10.1.0.0/22 --next_hop 172.16.1.2
 
