@@ -68,7 +68,7 @@ pynsxv_local esg set_dgw \
 pynsxv_local esg add_route \
   -n $NSX_EDGE_GEN_NAME \
   --route_net $(get_cidr $ESG_DEFAULT_UPLINK_IP_1 24) \
-  --next_hop "$ESG_DEFAULT_UPLINK_IP_1"
+  --next_hop "$ESG_GATEWAY_1"
 
 # Enable load balancing
 pynsxv_local lb enable_lb -n $NSX_EDGE_GEN_NAME
