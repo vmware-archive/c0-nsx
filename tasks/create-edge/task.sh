@@ -33,7 +33,6 @@ get_cidr() {
   echo "$FIRST_THREE.0/$MASK"
 }
 
-NUM_LOGICAL_SWITCHES=3
 # Create logical switches
 for labwire_id in $(seq $NUM_LOGICAL_SWITCHES); do
   pynsxv_local lswitch -n "labwire-proto-0$labwire_id" create
@@ -46,50 +45,53 @@ pynsxv_local esg create -n $NSX_EDGE_GEN_NAME -pg "$ESG_DEFAULT_UPLINK_PG_1"
 pynsxv_local esg cfg_interface \
   -n $NSX_EDGE_GEN_NAME \
   --portgroup "$ESG_DEFAULT_UPLINK_PG_1" \
-  --vnic_index 0 --vnic_type uplink --vnic_name "External" \
-  --vnic_ip $ESG_DEFAULT_UPLINK_IP_1 --vnic_mask 255.255.255.0
+  --vnic_index 0 --vnic_type uplink --vnic_name "uplink" \
+  --vnic_ip $ESG_DEFAULT_UPLINK_IP_1 --vnic_mask 25 \
+  --vnic_secondary_ips $ESG_DEFAULT_UPLINK_SECONDARY_IPS
 
 # Attach logical switches to an edge
+subnets=(10 20 24 28 32)
+masks=(26 22 22 22 22)
 for labwire_id in $(seq $NUM_LOGICAL_SWITCHES); do
   pynsxv_local esg cfg_interface -n $NSX_EDGE_GEN_NAME --logical_switch "labwire-proto-0$labwire_id" \
-    --vnic_index 1 --vnic_type internal --vnic_name Transit \
-    --vnic_ip "192.168.1$labwire_id.1" --vnic_mask 255.255.255.0
+    --vnic_index $labwire_id --vnic_type internal --vnic_name vnic$labwire_id \
+    --vnic_ip "192.168.${subnets[$labwire_id-1]}.1" --vnic_mask "${masks[$labwire_id-1]}"
 done
 
 # Configure firewall
 pynsxv_local esg set_fw_status -n $NSX_EDGE_GEN_NAME --fw_default accept
 
 # Set default gateway
-pynsxv_local esg set_dgw \
-  -n $NSX_EDGE_GEN_NAME \
-  --next_hop "$ESG_GATEWAY_1"
-
-# Set static route
-#pynsxv_local esg add_route \
-#  -n $NSX_EDGE_GEN_NAME \
-#  --route_net $(get_cidr $ESG_DEFAULT_UPLINK_IP_1 24) \
-#  --next_hop "$ESG_GATEWAY_1"
-
-# Enable load balancing
-pynsxv_local lb enable_lb -n $NSX_EDGE_GEN_NAME
-
-# Create lb app profile
-pynsxv_local lb add_profile \
-  -n $NSX_EDGE_GEN_NAME \
-  --profile_name appprofile \
-  --protocol HTTP
-
-# create lb pool
-pynsxv_local lb add_pool -n $NSX_EDGE_GEN_NAME \
-  --pool_name pool_web \
-  --transparent true
-
-# create lb vip
-pynsxv_local lb add_vip \
-  -n $NSX_EDGE_GEN_NAME \
-  --vip_name vip-gorouter-http-1 \
-  --pool_name pool_app \
-  --profile_name appprofile \
-  --vip_ip $ESG_GO_ROUTER_UPLINK_IP_1  \
-  --protocol HTTP \
-  --port 80
+# pynsxv_local esg set_dgw \
+#   -n $NSX_EDGE_GEN_NAME \
+#   --next_hop "$ESG_GATEWAY_1"
+#
+# # Set static route
+# #pynsxv_local esg add_route \
+# #  -n $NSX_EDGE_GEN_NAME \
+# #  --route_net $(get_cidr $ESG_DEFAULT_UPLINK_IP_1 24) \
+# #  --next_hop "$ESG_GATEWAY_1"
+#
+# # Enable load balancing
+# pynsxv_local lb enable_lb -n $NSX_EDGE_GEN_NAME
+#
+# # Create lb app profile
+# pynsxv_local lb add_profile \
+#   -n $NSX_EDGE_GEN_NAME \
+#   --profile_name appprofile \
+#   --protocol HTTP
+#
+# # create lb pool
+# pynsxv_local lb add_pool -n $NSX_EDGE_GEN_NAME \
+#   --pool_name pool_web \
+#   --transparent true
+#
+# # create lb vip
+# pynsxv_local lb add_vip \
+#   -n $NSX_EDGE_GEN_NAME \
+#   --vip_name vip-gorouter-http-1 \
+#   --pool_name pool_app \
+#   --profile_name appprofile \
+#   --vip_ip $ESG_GO_ROUTER_UPLINK_IP_1  \
+#   --protocol HTTP \
+#   --port 80
