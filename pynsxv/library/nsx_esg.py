@@ -104,7 +104,7 @@ def _esg_create(client_session, vccontent, **kwargs):
     else:
         print 'Edge Service Gateway {} creation failed'.format(kwargs['esg_name'])
 
-def routing_ospf(client_session, esg_name, area_id, auth_type, auth_value):
+def routing_ospf(client_session, esg_name, vnic_ip, area_id, auth_type, auth_value):
     """
     This function configures the edge for OSPF routing
     :param client_session: An instance of an NsxClient Session
@@ -113,42 +113,51 @@ def routing_ospf(client_session, esg_name, area_id, auth_type, auth_value):
     :param auth_value: The MD5 value or password based on auth_type
     :return: ???
     """
-    routing_ospf_dict = client_session.extract_resource_body_example('routingOSPF', 'update')
+    routing_dict = client_session.extract_resource_body_example('routingConfig', 'update')
 
-    del routing_ospf_dict['ospf']['redistribution']['rules']
-    routing_ospf_dict['ospf']['redistribution']['enabled'] = 'false'
 
-    routing_ospf_dict['ospf']['enabled'] = 'true'
-    routing_ospf_dict['ospf']['ospfAreas']['ospfArea']['areaId'] = area_id
-    routing_ospf_dict['ospf']['ospfAreas']['ospfArea']['translateType7ToType5'] = 'false'
-    routing_ospf_dict['ospf']['ospfAreas']['ospfArea']['type'] = 'Normal'
-    routing_ospf_dict['ospf']['ospfAreas']['ospfArea']['authentication']['type'] = auth_type
-    routing_ospf_dict['ospf']['ospfAreas']['ospfArea']['authentication']['value'] = auth_value
+    del routing_dict['routing']['ospf']['redistribution']['rules']
+    del routing_dict['routing']['bgp']['redistribution']['rules']
+    del['routing']['staticRouting']
+    del['routing']['ospf']['forwardingAddress']
+    del['routing']['ospf']['protocolAddress']
+    routing_dict['routing']['ospf']['redistribution']['enabled'] = 'false'
+    routing_dict['routing']['bgp']['enabled'] = 'false'
+    routing_dict['routing']['bgp']['redistribution']['enabled'] = 'false'
 
-    routing_ospf_dict['ospf']['ospfInterfaces']['ospfInterface']['vnic'] = '0'
-    routing_ospf_dict['ospf']['ospfInterfaces']['ospfInterface']['areaId'] = area_id
-    routing_ospf_dict['ospf']['ospfInterfaces']['ospfInterface']['helloInterval'] = '10'
-    routing_ospf_dict['ospf']['ospfInterfaces']['ospfInterface']['deadInterval'] = '40'
-    routing_ospf_dict['ospf']['ospfInterfaces']['ospfInterface']['priority'] = '128'
-    routing_ospf_dict['ospf']['ospfInterfaces']['ospfInterface']['cost'] = '1'
+    routing_dict['routing']['routingGlobalConfig']['routerId'] = vnic_ip
+
+    routing_dict['routing']['ospf']['enabled'] = 'true'
+    routing_dict['routing']['ospf']['ospfAreas']['ospfArea']['areaId'] = area_id
+    routing_dict['routing']['ospf']['ospfAreas']['ospfArea']['translateType7ToType5'] = 'false'
+    routing_dict['routing']['ospf']['ospfAreas']['ospfArea']['type'] = 'Normal'
+    routing_dict['routing']['ospf']['ospfAreas']['ospfArea']['authentication']['type'] = auth_type
+    routing_dict['routing']['ospf']['ospfAreas']['ospfArea']['authentication']['value'] = auth_value
+
+    routing_dict['routing']['ospf']['ospfInterfaces']['ospfInterface']['vnic'] = '0'
+    routing_dict['routing']['ospf']['ospfInterfaces']['ospfInterface']['areaId'] = area_id
+    routing_dict['routing']['ospf']['ospfInterfaces']['ospfInterface']['helloInterval'] = '10'
+    routing_dict['routing']['ospf']['ospfInterfaces']['ospfInterface']['deadInterval'] = '40'
+    routing_dict['routing']['ospf']['ospfInterfaces']['ospfInterface']['priority'] = '128'
+    routing_dict['routing']['ospf']['ospfInterfaces']['ospfInterface']['cost'] = '1'
 
     esg_id, esg_params = get_edge(client_session, esg_name)
     if not esg_id:
         return False, None
 
-    new_esg = client_session.update('routingOSPF', uri_parameters={'edgeId': esg_id}, request_body_dict=routing_ospf_dict)
+    new_esg = client_session.update('routingConfig', uri_parameters={'edgeId': esg_id}, request_body_dict=routing_dict)
     if new_esg['status'] == 204:
         return True, esg_id
     else:
         return False, esg_id
 
 def _routing_ospf(client_session, vccontent, **kwargs):
-    needed_params = ['esg_name', 'area_id', 'auth_type', 'auth_value']
+    needed_params = ['esg_name', 'vnic_ip', 'area_id', 'auth_type', 'auth_value']
     if not check_for_parameters(needed_params, kwargs):
         return None
 
     result, esg_id = routing_ospf(client_session, kwargs['esg_name'], kwargs['area_id'], kwargs['auth_type'],
-                                    kwargs['auth_value'])
+                                    kwargs['auth_value'], kwargs['vnic_ip'])
     if kwargs['verbose'] and result and esg_id:
         edge_id, esg_details = esg_read(client_session, esg_id)
         print json.dumps(esg_details)
