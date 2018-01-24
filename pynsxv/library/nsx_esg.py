@@ -119,7 +119,7 @@ def routing_ospf(client_session, esg_name, area_id, auth_type, auth_value):
     routing_ospf_dict['ospf']['redistribution']['enabled'] = 'false'
 
     routing_ospf_dict['ospf']['enabled'] = 'true'
-    routing_ospf_dict['ospf']['ospfAreas']['ospfArea']['areadId'] = area_id
+    routing_ospf_dict['ospf']['ospfAreas']['ospfArea']['areaId'] = area_id
     routing_ospf_dict['ospf']['ospfAreas']['ospfArea']['translateType7ToType5'] = 'false'
     routing_ospf_dict['ospf']['ospfAreas']['ospfArea']['type'] = 'Normal'
     routing_ospf_dict['ospf']['ospfAreas']['ospfArea']['authentication']['type'] = auth_type
