@@ -34,10 +34,8 @@ get_cidr() {
   echo "$FIRST_THREE.0/$MASK"
 }
 
-NUM_LOGICAL_SWITCHES=3
-
 # Create an edge
-pynsxv_local esg delete -n $NSX_EDGE_GEN_NAME 
+pynsxv_local esg delete -n $NSX_EDGE_GEN_NAME
 
 # Create logical switches
 for labwire_id in $(seq $NUM_LOGICAL_SWITCHES); do
