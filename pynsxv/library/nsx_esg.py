@@ -940,7 +940,7 @@ def _esg_main(args):
                                        route_net=args.route_net, fw_default=args.fw_default,
                                        esg_remote_access=args.esg_remote_access,
                                        vnic_secondary_ips=args.vnic_secondary_ips, verbose=args.verbose,
-                                       area=args.area_id, auth_type=args.auth_type, auth_value=args.auth_value)
+                                       area_id=args.area_id, auth_type=args.auth_type, auth_value=args.auth_value)
     except KeyError as e:
         print('Unknown command: {}'.format(e))
 
