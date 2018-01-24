@@ -61,6 +61,8 @@ done
 # Configure firewall
 pynsxv_local esg set_fw_status -n $NSX_EDGE_GEN_NAME --fw_default accept
 
+pynsxv_local esg routing_ospf -area 3505 -auth_type MD5 -auth_value ospfarea3505
+
 # Set default gateway
 # pynsxv_local esg set_dgw \
 #   -n $NSX_EDGE_GEN_NAME \
