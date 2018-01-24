@@ -125,7 +125,7 @@ def routing_ospf(client_session, esg_name, area_id, auth_type, auth_value):
     routing_ospf_dict['ospf']['ospfAreas']['ospfArea']['authentication']['type'] = auth_type
     routing_ospf_dict['ospf']['ospfAreas']['ospfArea']['authentication']['value'] = auth_value
 
-    routing_ospf_dict['ospf']['ospfInterfaces']['ospfInterface']['vnic'] = 'uplink'
+    routing_ospf_dict['ospf']['ospfInterfaces']['ospfInterface']['vnic'] = '0'
     routing_ospf_dict['ospf']['ospfInterfaces']['ospfInterface']['areaId'] = area_id
     routing_ospf_dict['ospf']['ospfInterfaces']['ospfInterface']['helloInterval'] = '10'
     routing_ospf_dict['ospf']['ospfInterfaces']['ospfInterface']['deadInterval'] = '40'
