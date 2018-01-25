@@ -4,7 +4,7 @@ platform: linux
 
 image_resource:
   type: docker-image
-  source: {repository: nsxedgegen/nsx-edge-gen-worker@sha256:d93b80e0726a28d349bfb65b4948b61fae92e124645afde0159f3525e3992b89}
+  source: {repository: czero/nsx-gen}
 
 inputs:
   - name: pynsxv
