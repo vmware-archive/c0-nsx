@@ -36,7 +36,7 @@ __author__ = 'yfauser'
 
 
 def add_app_profile(client_session, esg_name, prof_name, template, persistence=None, expire_time=None, cookie_name=None,
-                    cookie_mode=None, xforwardedfor=None, url=None):
+                    cookie_mode=None, xforwardedfor=None, url=None, cert_name=None):
     """
     This function adds an Load Balancer Application profile to an ESG
 
@@ -69,6 +69,14 @@ def add_app_profile(client_session, esg_name, prof_name, template, persistence=N
         return None
 
     app_prof = client_session.extract_resource_body_example('applicationProfiles', 'create')
+
+    if cert_name is not None:
+        cert_id, cert_params = get_certificate(client_session, esg_name, cert_name)
+        if not cert_id:
+            print 'Certificate could not be found'
+            return None
+        app_prof['applicationProfile']['clientSsl']['serviceCertificate'] = cert_id
+
 
     app_prof['applicationProfile']['name'] = prof_name
     app_prof['applicationProfile']['template'] = template
@@ -119,7 +127,7 @@ def _add_app_profile(client_session, **kwargs):
     result = add_app_profile(client_session, kwargs['esg_name'], kwargs['profile_name'], kwargs['protocol'],
                              persistence=kwargs['persistence'], expire_time=kwargs['expire'],
                              cookie_name=kwargs['cookie_name'], cookie_mode=kwargs['cookie_mode'],
-                             xforwardedfor=kwargs['xforwardedfor'], url=kwargs['url'])
+                             xforwardedfor=kwargs['xforwardedfor'], url=kwargs['url'], cert_name=kwargs['cert_name'])
 
     if result and kwargs['verbose']:
         print result

@@ -180,6 +180,25 @@ def connect_to_vc(vchost, user, pwd):
     return service_instance.RetrieveContent()
 
 
+def get_certificate(client_session, edge_name, cert_name):
+    """
+    :param client_session: An instance of an NsxClient Session
+    :param edge_name: The name of the edge searched
+    :param cert_name: The name of the cert to be found (the common name)
+    :return: A tuple, with the first item being the cert
+             and the second item being a dictionary of the logical parameters as return by the NSX API
+    """
+    edge_id = get_edge(client_session, edge_name)
+    all_certs = client_session.read_all_pages('certificateScope', 'read', uri_parameters={"scopeId": edge_id})
+
+    try:
+        cert_params = [scope for scope in all_certs if scope['name'] == cert_name][0]
+        cert_id = cert_params['objectId']
+    except IndexError:
+        return None, None
+
+    return cert_id, cert_params
+
 def get_edge(client_session, edge_name):
     """
     :param client_session: An instance of an NsxClient Session

@@ -40,7 +40,7 @@ def create_self_signed_cert(client_session, scope_id, cert, private_key):
     if result['status'] != 201:
         return None
     else:
-        return result['objectId']
+        return result['certificate']['objectId']
 
 def _create_self_signed_cert(client_session, **kwargs):
     needed_params = ['scope_id', 'cert', 'private_key']
@@ -52,7 +52,7 @@ def _create_self_signed_cert(client_session, **kwargs):
     if result and kwargs['verbose']:
         print result
     elif result:
-        print 'Certifcate created in scope {}'.format(kwargs['scope_id'])
+        print 'Certifcate {} created in scope {}'.format(result, kwargs['scope_id'])
     else:
         print 'Certifcate creation failed in scope {}'.format(kwargs['scope_id'])
 
