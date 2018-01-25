@@ -65,37 +65,62 @@ pynsxv_local esg routing_ospf -n $NSX_EDGE_GEN_NAME \
   --vnic_ip $ESG_DEFAULT_UPLINK_IP_1 \
   -area 3505 -auth_type md5 -auth_value ospfarea3505
 
-# Set default gateway
-# pynsxv_local esg set_dgw \
-#   -n $NSX_EDGE_GEN_NAME \
-#   --next_hop "$ESG_GATEWAY_1"
-#
-# # Set static route
-# #pynsxv_local esg add_route \
-# #  -n $NSX_EDGE_GEN_NAME \
-# #  --route_net $(get_cidr $ESG_DEFAULT_UPLINK_IP_1 24) \
-# #  --next_hop "$ESG_GATEWAY_1"
-#
-# # Enable load balancing
-# pynsxv_local lb enable_lb -n $NSX_EDGE_GEN_NAME
-#
-# # Create lb app profile
-# pynsxv_local lb add_profile \
-#   -n $NSX_EDGE_GEN_NAME \
-#   --profile_name appprofile \
-#   --protocol HTTP
-#
-# # create lb pool
-# pynsxv_local lb add_pool -n $NSX_EDGE_GEN_NAME \
-#   --pool_name pool_web \
-#   --transparent true
-#
-# # create lb vip
-# pynsxv_local lb add_vip \
-#   -n $NSX_EDGE_GEN_NAME \
-#   --vip_name vip-gorouter-http-1 \
-#   --pool_name pool_app \
-#   --profile_name appprofile \
-#   --vip_ip $ESG_GO_ROUTER_UPLINK_IP_1  \
-#   --protocol HTTP \
-#   --port 80
+
+# Enable load balancing
+pynsxv_local lb enable_lb -n $NSX_EDGE_GEN_NAME
+
+# Create lb app profile for http
+pynsxv_local lb add_profile \
+  -n $NSX_EDGE_GEN_NAME \
+  --profile_name pcf-http \
+  --protocol HTTP \
+  -x true
+
+  # Create lb app profile for https
+  pynsxv_local lb add_profile \
+    -n $NSX_EDGE_GEN_NAME \
+    --profile_name pcf-https \
+    --protocol HTTPS \
+    -x true
+
+  #Add monitor for http
+  pynsxv_local lb add_monitor \
+    -n $NSX_EDGE_GEN_NAME \
+    --mon_name monitor-pcf-http \
+    --method GET \
+    --url "/health" \
+    --protocol HTTP
+
+  #Add monitor for https
+  pynsxv_local lb add_monitor \
+    -n $NSX_EDGE_GEN_NAME \
+    --mon_name monitor-pcf-https \
+    --method GET \
+    --url "/health" \
+    --protocol HTTPS
+
+# create lb pool
+pynsxv_local lb add_pool -n $NSX_EDGE_GEN_NAME \
+  --pool_name gortr-pool \
+  --algorithm round-robin \
+  --monitor monitor-pcf-http
+
+# create lb vip for http
+pynsxv_local lb add_vip \
+  -n $NSX_EDGE_GEN_NAME \
+  --vip_name gortr-http \
+  --pool_name gortr-pool \
+  --profile_name pcf-http \
+  --vip_ip $ESG_GO_ROUTER_UPLINK_IP_1  \
+  --protocol HTTP \
+  --port 80
+
+  # create lb vip for https
+pynsxv_local lb add_vip \
+  -n $NSX_EDGE_GEN_NAME \
+  --vip_name gortr-https \
+  --pool_name gortr-pool \
+  --profile_name pcf-https \
+  --vip_ip $ESG_GO_ROUTER_UPLINK_IP_1  \
+  --protocol HTTPS \
+  --port 443
