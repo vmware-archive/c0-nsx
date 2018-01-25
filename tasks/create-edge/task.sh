@@ -41,6 +41,16 @@ done
 # Create an edge
 pynsxv_local esg create -n $NSX_EDGE_GEN_NAME -pg "$ESG_DEFAULT_UPLINK_PG_1"
 
+# Add Cert
+
+echo "$ERT_SSL_CERT" > cert.crt
+echo "$ERT_SSL_KEY" > cert.key
+
+pynsxv_local cert create_self_signed \
+  -s $NSX_EDGE_GEN_NAME \
+  -c cert.crt \
+  -pk cert.key
+
 # Connect the edge to a backbone
 pynsxv_local esg cfg_interface \
   -n $NSX_EDGE_GEN_NAME \
@@ -172,4 +182,4 @@ pynsxv_local lb add_vip \
   --protocol HTTPS \
   --port 443 \
   --rule_id "applicationRule-1" \
-  --rule_id "applicationRule-2" 
+  --rule_id "applicationRule-2"
