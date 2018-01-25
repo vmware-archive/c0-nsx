@@ -118,12 +118,12 @@ def routing_ospf(client_session, esg_name, vnic_ip, area_id, auth_type, auth_val
 
     del routing_dict['routing']['ospf']['redistribution']['rules']
     del routing_dict['routing']['bgp']['redistribution']['rules']
-    del routing_dict['routing']['staticRouting']
-    del routing_dict['routing']['ospf']['forwardingAddress']
-    del routing_dict['routing']['ospf']['protocolAddress']
+    del routing_dict['routing']['staticRouting']['staticRoutes']
     routing_dict['routing']['ospf']['redistribution']['enabled'] = 'false'
     routing_dict['routing']['bgp']['enabled'] = 'false'
     routing_dict['routing']['bgp']['redistribution']['enabled'] = 'false'
+
+    routing_dict['routing']['staticRouting']['defaultRoute']['gatewayAddress'] = '10.193.252.1'
 
     routing_dict['routing']['routingGlobalConfig']['routerId'] = vnic_ip
 
