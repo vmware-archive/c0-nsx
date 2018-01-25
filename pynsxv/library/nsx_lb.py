@@ -130,6 +130,54 @@ def _add_app_profile(client_session, **kwargs):
         print 'LB App configuration on esg {} failed'.format(kwargs['esg_name'])
 
 
+def add_app_rule(client_session, esg_name, rule_name, rule_script):
+    """
+    This function adds an application rule to the load balancer
+
+    :type client_session: nsxramlclient.client.NsxClient
+    :param client_session: A nsxramlclient session Object
+    :type esg_name: str
+    :param esg_name: The display name of a Edge Service Gateway used for Load Balancing
+    :type rule_name: str
+    :param rule_name: The display name of a Edge Service Gateway used for Load Balancing
+    :type rule_script: str
+    :param rule_script: The name for the to be created Load Balancer Application profile
+    :return: Returns the Object Id of the newly created Application Rule, False on a failure, and None if the ESG was
+             not found in NSX
+    :rtype: str
+    """
+    esg_id, esg_params = get_edge(client_session, esg_name)
+    if not esg_id:
+        return None
+
+    rule_dict = client_session.extract_resource_body_example('appRules', 'create')
+
+    rule_dict['applicationRule']['name'] = rule_name
+    rule_dict['applicationRule']['script'] = rule_script
+
+    result = client_session.create('appRules', uri_parameters={'edgeId': esg_id}, request_body_dict=rule_dict)
+    if result['status'] != 201:
+        return None
+    else:
+        return result['objectId']
+
+
+def _add_app_rule(client_session, **kwargs):
+    needed_params = ['esg_name', 'rule_name', 'rule_script']
+    if not check_for_parameters(needed_params, kwargs):
+        return None
+
+    result = add_app_rule(client_session, kwargs['esg_name'], kwargs['rule_name'], kwargs['rule_script'])
+
+    if result and kwargs['verbose']:
+        print result
+    elif result:
+        print 'LB App Profile configuration on esg {} succeeded, the App Profile Id is {}'.format(kwargs['esg_name'],
+                                                                                                  result)
+    else:
+        print 'LB App configuration on esg {} failed'.format(kwargs['esg_name'])
+
+
 def read_app_profile(client_session, esg_name, prof_name):
     """
     This function read a Load Balancer Application profile on an ESG and returns its Id and details
@@ -1439,6 +1487,7 @@ def contruct_parser(subparsers):
     disable_lb:         Disables the Load Balancing Service on the ESG
     show_lb:            Show the current LB Configuration and Status
     delete_lb:          Delete the complete LB Configuration on the Load Balancer
+    add_rule:       Adds a new application rule
     """)
 
     parser.add_argument("-n",
@@ -1580,6 +1629,12 @@ def contruct_parser(subparsers):
     parser.add_argument("-ll",
                         "--log_level",
                         help="Log level for LB")
+    parser.add_argument("-rn",
+                        "--rule_name",
+                        help="Name of application rule")
+    parser.add_argument("-rs",
+                        "--rule_script",
+                        help="Script to use for application rule")
 
     parser.set_defaults(func=_lb_main)
 
@@ -1627,7 +1682,8 @@ def _lb_main(args):
             'enable_lb': _enable_lb,
             'disable_lb': _disable_lb,
             'show_lb': _show_loadbalancer,
-            'delete_lb': _delete_load_balancer
+            'delete_lb': _delete_load_balancer,
+            'add_rule': _add_app_rule
             }
         command_selector[args.command](client_session, esg_name=args.esg_name, profile_name=args.profile_name,
                                        profile_id=args.profile_id, protocol=args.protocol,
@@ -1645,7 +1701,8 @@ def _lb_main(args):
                                        log_level=args.log_level, mon_name=args.mon_name, mon_id=args.mon_id,
                                        timeout=args.timeout, interval=args.interval, max_retries=args.max_retries,
                                        mon_expected=args.mon_expected, method=args.method, send=args.send,
-                                       receive=args.receive, extension=args.extension, verbose=args.verbose)
+                                       receive=args.receive, extension=args.extension, verbose=args.verbose,
+                                       rule_name=args.rule_name, rule_script=args.rule_script)
     except KeyError as e:
         print('Unknown command: {}'.format(e))
 

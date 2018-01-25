@@ -105,6 +105,51 @@ pynsxv_local lb add_pool -n $NSX_EDGE_GEN_NAME \
   --algorithm round-robin \
   --monitor monitor-pcf-http
 
+# add members to pool
+pynsxv_local lb add_member \
+  -n $NSX_EDGE_GEN_NAME \
+  --pool_name gortr-pool \
+  --member_name gortr-100 \
+  --member 192.168.20.100 \
+  --port 80 \
+  --monitor_port 8080 \
+  --weight 1
+
+pynsxv_local lb add_member \
+  -n $NSX_EDGE_GEN_NAME \
+  --pool_name gortr-pool \
+  --member_name gortr-101 \
+  --member 192.168.20.101 \
+  --port 80 \
+  --monitor_port 8080 \
+  --weight 1
+
+pynsxv_local lb add_member \
+  -n $NSX_EDGE_GEN_NAME \
+  --pool_name gortr-pool \
+  --member_name gortr-102 \
+  --member 192.168.20.102 \
+  --port 80 \
+  --monitor_port 8080 \
+  --weight 1
+
+# create app rules
+pynsxv_local lb add_rule \
+  -n $NSX_EDGE_GEN_NAME \
+  -rn "option httplog"
+  -rs "option httplog"
+
+pynsxv_local lb add_rule \
+  -n $NSX_EDGE_GEN_NAME \
+  -rn "reqadd X-Forwarded-Proto:\ https"
+  -rs "reqadd X-Forwarded-Proto:\ https"
+
+  pynsxv_local lb add_rule \
+    -n $NSX_EDGE_GEN_NAME \
+    -rn "reqadd X-Forwarded-Proto:\ http"
+    -rs "reqadd X-Forwarded-Proto:\ http"
+
+
 # create lb vip for http
 pynsxv_local lb add_vip \
   -n $NSX_EDGE_GEN_NAME \
