@@ -136,17 +136,17 @@ pynsxv_local lb add_member \
 # create app rules
 pynsxv_local lb add_rule \
   -n $NSX_EDGE_GEN_NAME \
-  -rn "option httplog"
+  -rn "option httplog" \
   -rs "option httplog"
 
 pynsxv_local lb add_rule \
   -n $NSX_EDGE_GEN_NAME \
-  -rn "reqadd X-Forwarded-Proto:\ https"
+  -rn "reqadd X-Forwarded-Proto:\ https" \
   -rs "reqadd X-Forwarded-Proto:\ https"
 
   pynsxv_local lb add_rule \
     -n $NSX_EDGE_GEN_NAME \
-    -rn "reqadd X-Forwarded-Proto:\ http"
+    -rn "reqadd X-Forwarded-Proto:\ http" \
     -rs "reqadd X-Forwarded-Proto:\ http"
 
 
