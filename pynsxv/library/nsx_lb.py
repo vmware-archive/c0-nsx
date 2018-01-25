@@ -26,7 +26,7 @@ import argparse
 import ConfigParser
 import json
 from tabulate import tabulate
-from libutils import get_edge, check_for_parameters
+from libutils import get_edge, check_for_parameters, get_certificate
 from nsxramlclient.client import NsxClient
 from argparse import RawTextHelpFormatter
 from pkg_resources import resource_filename
