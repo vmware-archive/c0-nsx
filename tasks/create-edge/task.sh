@@ -158,7 +158,9 @@ pynsxv_local lb add_vip \
   --profile_name pcf-http \
   --vip_ip $ESG_GO_ROUTER_UPLINK_IP_1  \
   --protocol HTTP \
-  --port 80
+  --port 80 \
+  --rule_id "applicationRule-1" \
+  --rule_id "applicationRule-3"
 
   # create lb vip for https
 pynsxv_local lb add_vip \
@@ -168,4 +170,6 @@ pynsxv_local lb add_vip \
   --profile_name pcf-https \
   --vip_ip $ESG_GO_ROUTER_UPLINK_IP_1  \
   --protocol HTTPS \
-  --port 443
+  --port 443 \
+  --rule_id "applicationRule-1" \
+  --rule_id "applicationRule-2" 

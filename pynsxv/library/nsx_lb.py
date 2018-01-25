@@ -802,7 +802,7 @@ def _list_members(client_session, **kwargs):
                                              "Max Conn", "Min Conn", "Condition"], tablefmt="psql")
 
 
-def add_vip(client_session, esg_name, vip_name, app_profile, vip_ip, protocol, port, pool_name, vip_description=None,
+def add_vip(client_session, esg_name, vip_name, app_profile, vip_ip, protocol, port, pool_name, rule_id, vip_description=None,
             conn_limit=None, conn_rate_limit=None, acceleration=None):
     """
     This function creates a Load Balancing Virtual IP / Virtual Server (VIP) on an ESG
@@ -831,6 +831,8 @@ def add_vip(client_session, esg_name, vip_name, app_profile, vip_ip, protocol, p
     :param conn_rate_limit: Connection rate Limit on the virtual server (VIP)
     :type acceleration: str
     :param acceleration: Is Acceleration enabled for this VIP ('true'/'false')
+    :type rule_id: str
+    :param rule_id: Rule ID to add to VIP
     :rtype: str
     :return: Returns the Object Id of the newly created VIP, False on a failure, and None if the ESG was
              not found in NSX
@@ -864,6 +866,7 @@ def add_vip(client_session, esg_name, vip_name, app_profile, vip_ip, protocol, p
     vip['virtualServer']['defaultPoolId'] = pool_id
     vip['virtualServer']['enableServiceInsertion'] = 'false'
     vip['virtualServer']['accelerationEnabled'] = acceleration
+    vip['virtualServer']['applicationRuleId'] = rule_id
 
     result = client_session.create('virtualServers', uri_parameters={'edgeId': esg_id}, request_body_dict=vip)
 
@@ -881,7 +884,7 @@ def _add_vip(client_session, **kwargs):
     result = add_vip(client_session, kwargs['esg_name'], kwargs['vip_name'], kwargs['profile_name'], kwargs['vip_ip'],
                      kwargs['protocol'], kwargs['port'], kwargs['pool_name'], vip_description=kwargs['vip_description'],
                      conn_limit=kwargs['conn_limit'], conn_rate_limit=kwargs['conn_rate_limit'],
-                     acceleration=kwargs['acceleration'])
+                     acceleration=kwargs['acceleration'], rule_id=kwargs['rule_id'])
 
     if result and kwargs['verbose']:
         print result
@@ -1635,6 +1638,10 @@ def contruct_parser(subparsers):
     parser.add_argument("-rs",
                         "--rule_script",
                         help="Script to use for application rule")
+    parser.add_argument("-rid",
+                        "--rule_id",
+                        help="Rule ID to add to VIP",
+                        action="append")
 
     parser.set_defaults(func=_lb_main)
 
@@ -1702,7 +1709,7 @@ def _lb_main(args):
                                        timeout=args.timeout, interval=args.interval, max_retries=args.max_retries,
                                        mon_expected=args.mon_expected, method=args.method, send=args.send,
                                        receive=args.receive, extension=args.extension, verbose=args.verbose,
-                                       rule_name=args.rule_name, rule_script=args.rule_script)
+                                       rule_name=args.rule_name, rule_script=args.rule_script, rule_id=args.rule_id)
     except KeyError as e:
         print('Unknown command: {}'.format(e))
 
