@@ -122,6 +122,7 @@ def routing_ospf(client_session, esg_name, vnic_ip, area_id, auth_type, auth_val
     routing_dict['routing']['ospf']['redistribution']['enabled'] = 'false'
 
     routing_dict['routing']['staticRouting']['defaultRoute']['gatewayAddress'] = '10.193.252.1'
+    routing_dict['routing']['staticRouting']['defaultRoute']['vnic'] = '0'
 
     routing_dict['routing']['routingGlobalConfig']['routerId'] = vnic_ip
 
