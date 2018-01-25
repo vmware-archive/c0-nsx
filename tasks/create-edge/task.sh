@@ -44,7 +44,7 @@ pynsxv_local esg create -n $NSX_EDGE_GEN_NAME -pg "$ESG_DEFAULT_UPLINK_PG_1"
 # Add Cert
 
 echo "$ERT_SSL_CERT" > cert.crt
-echo "$ERT_SSL_KEY" > cert.key
+echo "$ERT_SSL_PRIVATE_KEY" > cert.key
 
 pynsxv_local cert create_self_signed \
   -s $NSX_EDGE_GEN_NAME \
