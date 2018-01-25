@@ -189,7 +189,7 @@ def get_certificate(client_session, edge_name, cert_name):
              and the second item being a dictionary of the logical parameters as return by the NSX API
     """
     edge_id, edge_params = get_edge(client_session, edge_name)
-    all_certs = client_session.read('certificateScope', uri_parameters={"scopeId": edge_id})
+    all_certs = client_session.read('certificateScope', uri_parameters={"scopeId": edge_id})['body']['certificates']
     print all_certs
     try:
         cert_params = [scope for scope in all_certs if scope['name'] == cert_name][0]
