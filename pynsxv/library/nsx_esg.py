@@ -126,7 +126,7 @@ def routing_ospf(client_session, esg_name, vnic_ip, area_id, auth_type, auth_val
     routing_dict['routing']['routingGlobalConfig']['routerId'] = vnic_ip
 
     routing_dict['routing']['ospf']['enabled'] = 'true'
-    routing_dict['routing']['ospf']['gracefulRestart'] = 'false'
+    routing_dict['routing']['ospf']['gracefulRestart'] = 'true'
     routing_dict['routing']['ospf']['ospfAreas']['ospfArea']['areaId'] = area_id
     routing_dict['routing']['ospf']['ospfAreas']['ospfArea']['type'] = 'Normal'
     routing_dict['routing']['ospf']['ospfAreas']['ospfArea']['authentication']['type'] = auth_type
