@@ -89,11 +89,6 @@ def _cert_main(args):
     config = ConfigParser.ConfigParser()
     assert config.read(args.ini), 'could not read config file {}'.format(args.ini)
 
-    if args.transport_zone:
-        transport_zone = args.transport_zone
-    else:
-        transport_zone = config.get('defaults', 'transport_zone')
-
     try:
         nsxramlfile = config.get('nsxraml', 'nsxraml_file')
     except (ConfigParser.NoSectionError):
