@@ -118,9 +118,9 @@ def routing_ospf(client_session, esg_name, vnic_ip, area_id, auth_type, auth_val
 
     del routing_dict['routing']['ospf']['redistribution']['rules']
     del routing_dict['routing']['bgp']['redistribution']['rules']
-    del['routing']['staticRouting']
-    del['routing']['ospf']['forwardingAddress']
-    del['routing']['ospf']['protocolAddress']
+    del routing_dict['routing']['staticRouting']
+    del routing_dict['routing']['ospf']['forwardingAddress']
+    del routing_dict['routing']['ospf']['protocolAddress']
     routing_dict['routing']['ospf']['redistribution']['enabled'] = 'false'
     routing_dict['routing']['bgp']['enabled'] = 'false'
     routing_dict['routing']['bgp']['redistribution']['enabled'] = 'false'
