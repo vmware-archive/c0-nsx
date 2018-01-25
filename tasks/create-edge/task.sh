@@ -91,7 +91,8 @@ pynsxv_local lb add_profile \
     -n $NSX_EDGE_GEN_NAME \
     --profile_name pcf-https \
     --protocol HTTPS \
-    -x true
+    -x true \
+    -cert "$ERT_SSL_CERT_CN"
 
   #Add monitor for http
   pynsxv_local lb add_monitor \
@@ -172,14 +173,14 @@ pynsxv_local lb add_vip \
   --rule_id "applicationRule-1" \
   --rule_id "applicationRule-3"
 
-  # create lb vip for https
-# pynsxv_local lb add_vip \
-#   -n $NSX_EDGE_GEN_NAME \
-#   --vip_name gortr-https \
-#   --pool_name gortr-pool \
-#   --profile_name pcf-https \
-#   --vip_ip $ESG_GO_ROUTER_UPLINK_IP_1  \
-#   --protocol HTTPS \
-#   --port 443 \
-#   --rule_id "applicationRule-1" \
-#   --rule_id "applicationRule-2"
+  create lb vip for https
+pynsxv_local lb add_vip \
+  -n $NSX_EDGE_GEN_NAME \
+  --vip_name gortr-https \
+  --pool_name gortr-pool \
+  --profile_name pcf-https \
+  --vip_ip $ESG_GO_ROUTER_UPLINK_IP_1  \
+  --protocol HTTPS \
+  --port 443 \
+  --rule_id "applicationRule-1" \
+  --rule_id "applicationRule-2"
