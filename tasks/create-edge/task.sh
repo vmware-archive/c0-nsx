@@ -35,7 +35,7 @@ get_cidr() {
 
 # Create logical switches
 for labwire_id in $(seq $NUM_LOGICAL_SWITCHES); do
-  pynsxv_local lswitch -n "labwire-proto-0$labwire_id" create
+  pynsxv_local lswitch -n "labwire-$NSX_EDGE_GEN_NAME-$OWNER_NAME-$labwire_id" create
 done
 
 # Create an edge
