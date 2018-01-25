@@ -63,7 +63,7 @@ pynsxv_local esg cfg_interface \
 subnets=(10 20 24 28 32)
 masks=(26 22 22 22 22)
 for labwire_id in $(seq $NUM_LOGICAL_SWITCHES); do
-  pynsxv_local esg cfg_interface -n $NSX_EDGE_GEN_NAME --logical_switch "labwire-proto-0$labwire_id" \
+  pynsxv_local esg cfg_interface -n $NSX_EDGE_GEN_NAME --logical_switch "labwire-$NSX_EDGE_GEN_NAME-$OWNER_NAME-$labwire_id" \
     --vnic_index $labwire_id --vnic_type internal --vnic_name vnic$labwire_id \
     --vnic_ip "192.168.${subnets[$labwire_id-1]}.1" --vnic_mask "${masks[$labwire_id-1]}"
 done
@@ -173,13 +173,13 @@ pynsxv_local lb add_vip \
   --rule_id "applicationRule-3"
 
   # create lb vip for https
-pynsxv_local lb add_vip \
-  -n $NSX_EDGE_GEN_NAME \
-  --vip_name gortr-https \
-  --pool_name gortr-pool \
-  --profile_name pcf-https \
-  --vip_ip $ESG_GO_ROUTER_UPLINK_IP_1  \
-  --protocol HTTPS \
-  --port 443 \
-  --rule_id "applicationRule-1" \
-  --rule_id "applicationRule-2"
+# pynsxv_local lb add_vip \
+#   -n $NSX_EDGE_GEN_NAME \
+#   --vip_name gortr-https \
+#   --pool_name gortr-pool \
+#   --profile_name pcf-https \
+#   --vip_ip $ESG_GO_ROUTER_UPLINK_IP_1  \
+#   --protocol HTTPS \
+#   --port 443 \
+#   --rule_id "applicationRule-1" \
+#   --rule_id "applicationRule-2"
