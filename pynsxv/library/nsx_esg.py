@@ -115,10 +115,6 @@ def routing_ospf(client_session, esg_name, vnic_ip, area_id, auth_type, auth_val
     """
     routing_dict = client_session.extract_resource_body_example('routingConfig', 'update')
 
-    for keys,values in routing_dict.items():
-        print(keys)
-        print(values)
-
     del routing_dict['routing']['ospf']['redistribution']['rules']
     del routing_dict['routing']['bgp']['redistribution']['rules']
     del routing_dict['routing']['staticRouting']['staticRoutes']
@@ -131,6 +127,7 @@ def routing_ospf(client_session, esg_name, vnic_ip, area_id, auth_type, auth_val
     routing_dict['routing']['routingGlobalConfig']['routerId'] = vnic_ip
 
     routing_dict['routing']['ospf']['enabled'] = 'true'
+    routing_dict['routing']['ospf']['gracefulRestart'] = 'false'
     routing_dict['routing']['ospf']['ospfAreas']['ospfArea']['areaId'] = area_id
     routing_dict['routing']['ospf']['ospfAreas']['ospfArea']['translateType7ToType5'] = 'false'
     routing_dict['routing']['ospf']['ospfAreas']['ospfArea']['type'] = 'Normal'
@@ -159,8 +156,8 @@ def _routing_ospf(client_session, vccontent, **kwargs):
     if not check_for_parameters(needed_params, kwargs):
         return None
 
-    result, esg_id = routing_ospf(client_session, kwargs['esg_name'], kwargs['area_id'], kwargs['auth_type'],
-                                    kwargs['auth_value'], kwargs['vnic_ip'])
+    result, esg_id = routing_ospf(client_session, kwargs['esg_name'], kwargs['vnic_ip'], kwargs['area_id'], kwargs['auth_type'],
+                                    kwargs['auth_value'])
     if kwargs['verbose'] and result and esg_id:
         edge_id, esg_details = esg_read(client_session, esg_id)
         print json.dumps(esg_details)
