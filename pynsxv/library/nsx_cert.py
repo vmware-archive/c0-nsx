@@ -33,7 +33,7 @@ def create_self_signed_cert(client_session, scope_id, cert, private_key):
     cert_dict = client_session.extract_resource_body_example('certificateSelfSigned', 'create')
 
     cert_dict['trustObject']['pemEncoding'] = cert.read()
-    cert_dict['trustObject']['private_key'] = private_key.read()
+    cert_dict['trustObject']['privateKey'] = private_key.read()
 
     result = client_session.create('certificateSelfSigned', uri_parameters={'scopeId': esg_id},
                                    request_body_dict=cert_dict)
