@@ -115,6 +115,9 @@ def routing_ospf(client_session, esg_name, vnic_ip, area_id, auth_type, auth_val
     """
     routing_dict = client_session.extract_resource_body_example('routingConfig', 'update')
 
+    for keys,values in routing_dict.items():
+        print(keys)
+        print(values)
 
     del routing_dict['routing']['ospf']['redistribution']['rules']
     del routing_dict['routing']['bgp']['redistribution']['rules']
