@@ -190,7 +190,7 @@ def get_certificate(client_session, edge_name, cert_name):
     """
     edge_id, edge_params = get_edge(client_session, edge_name)
     all_certs = client_session.read('certificateScope', uri_parameters={"scopeId": edge_id})
-
+    print all_certs
     try:
         cert_params = [scope for scope in all_certs if scope['name'] == cert_name][0]
         cert_id = cert_params['objectId']
