@@ -77,7 +77,7 @@ def add_app_profile(client_session, esg_name, prof_name, template, persistence=N
         if not cert_id:
             print 'Certificate could not be found'
             return None
-        app_prof['applicationProfile']['clientSsl']['serviceCertificate'] = cert_id
+        app_prof['applicationProfile']['clientSsl'] = {'serviceCertificate' : cert_id, 'clientAuth' : 'ignore'}
 
 
     app_prof['applicationProfile']['name'] = prof_name
