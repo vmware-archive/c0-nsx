@@ -88,10 +88,10 @@ def contruct_parser(subparsers):
                         "--translated_source",
                         help="Translated Source IP Address")
 
-    parser.set_defaults(func=_cert_main)
+    parser.set_defaults(func=_nat_main)
 
 
-def _cert_main(args):
+def _nat_main(args):
     if args.debug:
         debug = True
     else:
