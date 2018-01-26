@@ -3,6 +3,8 @@ nsx_edge_params: &nsx-edge-params
   VCENTER_USR: {{vcenter_usr}}
   VCENTER_PWD: {{vcenter_pwd}}
   VCENTER_DATA_CENTER: {{vcenter_data_center}}
+  OWNER_NAME: {{owner_name}}
+  ERT_SSL_CERT_CN: {{ssl_cert_cn}}
   ERT_SSL_CERT: {{ssl_cert}}
   ERT_SSL_PRIVATE_KEY: {{ssl_private_key}}
   NSX_EDGE_GEN_NSX_MANAGER_ADDRESS: {{nsx_edge_gen_nsx_manager_address}}
@@ -57,7 +59,7 @@ nsx_edge_params: &nsx-edge-params
   ESG_GO_ROUTER_ISOZONE_1_SSL_TERM_1: {{esg_go_router_isozone_1_ssl_term_1}}
   NUM_LOGICAL_SWITCHES: {{num_logical_switches}}
   ESG_DEFAULT_UPLINK_SECONDARY_IPS: {{esg_default_uplink_secondary_ips}}
-
+  ESG_SNAT_UPLINK_IP_1: {{esg_snat_uplink_ip_1}}
 
 resources:
 - name: pynsxv
