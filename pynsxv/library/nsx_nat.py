@@ -26,17 +26,19 @@ def add_snat_rule(client_session, esg_name, source, translated_source):
              not found in NSX
     :rtype: str
     """
+    print '1'
     esg_id, esg_params = get_edge(client_session, esg_name)
     if not esg_id:
         return None
 
+    print '2'
     nat_dict = client_session.extract_resource_body_example('edgeNatRules', 'create')
 
     del nat_dict['natRule']['dnatMatchSourceAddress']
     del nat_dict['natRule']['translatedPort']
     del nat_dict['natRule']['originalPort']
     del nat_dict['natRule']['dnatMatchSourcePort']
-
+    print '3'
     nat_dict['natRule']['action'] = 'snat'
     nat_dict['natRule']['vnic'] = '0'
     nat_dict['natRule']['protocol'] = 'tcp'
@@ -46,12 +48,15 @@ def add_snat_rule(client_session, esg_name, source, translated_source):
     nat_dict['natRule']['translatedAddress'] = translated_source
     nat_dict['natRule']['snatMatchSourceAddress'] = 'any'
     nat_dict['natRule']['snatMatchSourcePort'] = 'any'
-
+    print '4'
     result = client_session.create('edgeNatRules', uri_parameters={'edgeId': esg_id},
                                    request_body_dict=nat_dict)
+    print '5'
     if result['status'] != 201:
         return None
     else:
+        print '6'
+        print result
         return result['objectId']
 
 def _add_snat_rule(client_session, **kwargs):
