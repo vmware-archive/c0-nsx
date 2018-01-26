@@ -58,7 +58,7 @@ def _add_snat_rule(client_session, **kwargs):
     needed_params = ['esg_name', 'source', 'translated_source']
     if not check_for_parameters(needed_params, kwargs):
         return None
-
+    print 'HERE'
     result = add_snat_rule(client_session, kwargs['esg_name'], kwargs['source'], kwargs['translated_source'])
 
     if result and kwargs['verbose']:
