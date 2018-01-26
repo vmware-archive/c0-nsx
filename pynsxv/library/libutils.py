@@ -245,7 +245,11 @@ def get_edgeresourcepoolmoid(content, edge_cluster):
     if cluser_mo:
         return str(cluser_mo._moId)
     else:
-        return None
+        cluser_mo = get_mo_by_name(content, edge_cluster, VIM_TYPES['resourcepool_name'])
+        if cluser_mo:
+            return str(cluser_mo._moId)
+        else:
+            return None
 
 
 def get_vdsportgroupid(content, switch_name):
