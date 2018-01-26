@@ -94,93 +94,93 @@ get_cidr() {
     -x true \
     -cert "$ERT_SSL_CERT_CN"
 
-  #Add monitor for http
-  pynsxv_local lb add_monitor \
-    -n $NSX_EDGE_GEN_NAME \
-    --mon_name monitor-pcf-http \
-    --method GET \
-    --url "/health" \
-    --protocol HTTP
-
-  #Add monitor for https
-  pynsxv_local lb add_monitor \
-    -n $NSX_EDGE_GEN_NAME \
-    --mon_name monitor-pcf-https \
-    --method GET \
-    --url "/health" \
-    --protocol HTTPS
-
-# create lb pool
-pynsxv_local lb add_pool -n $NSX_EDGE_GEN_NAME \
-  --pool_name gortr-pool \
-  --algorithm round-robin \
-  --monitor monitor-pcf-http
-
-# add members to pool
-pynsxv_local lb add_member \
-  -n $NSX_EDGE_GEN_NAME \
-  --pool_name gortr-pool \
-  --member_name gortr-100 \
-  --member 192.168.20.100 \
-  --port 80 \
-  --monitor_port 8080 \
-  --weight 1
-
-pynsxv_local lb add_member \
-  -n $NSX_EDGE_GEN_NAME \
-  --pool_name gortr-pool \
-  --member_name gortr-101 \
-  --member 192.168.20.101 \
-  --port 80 \
-  --monitor_port 8080 \
-  --weight 1
-
-pynsxv_local lb add_member \
-  -n $NSX_EDGE_GEN_NAME \
-  --pool_name gortr-pool \
-  --member_name gortr-102 \
-  --member 192.168.20.102 \
-  --port 80 \
-  --monitor_port 8080 \
-  --weight 1
-
-# create app rules
-pynsxv_local lb add_rule \
-  -n $NSX_EDGE_GEN_NAME \
-  -rn "option httplog" \
-  -rs "option httplog"
-
-pynsxv_local lb add_rule \
-  -n $NSX_EDGE_GEN_NAME \
-  -rn "reqadd X-Forwarded-Proto:\ https" \
-  -rs "reqadd X-Forwarded-Proto:\ https"
-
-  pynsxv_local lb add_rule \
-    -n $NSX_EDGE_GEN_NAME \
-    -rn "reqadd X-Forwarded-Proto:\ http" \
-    -rs "reqadd X-Forwarded-Proto:\ http"
-
-
-# create lb vip for http
-pynsxv_local lb add_vip \
-  -n $NSX_EDGE_GEN_NAME \
-  --vip_name gortr-http \
-  --pool_name gortr-pool \
-  --profile_name pcf-http \
-  --vip_ip $ESG_GO_ROUTER_UPLINK_IP_1  \
-  --protocol HTTP \
-  --port 80 \
-  --rule_id "applicationRule-1" \
-  --rule_id "applicationRule-3"
-
-  create lb vip for https
-pynsxv_local lb add_vip \
-  -n $NSX_EDGE_GEN_NAME \
-  --vip_name gortr-https \
-  --pool_name gortr-pool \
-  --profile_name pcf-https \
-  --vip_ip $ESG_GO_ROUTER_UPLINK_IP_1  \
-  --protocol HTTPS \
-  --port 443 \
-  --rule_id "applicationRule-1" \
-  --rule_id "applicationRule-2"
+#   #Add monitor for http
+#   pynsxv_local lb add_monitor \
+#     -n $NSX_EDGE_GEN_NAME \
+#     --mon_name monitor-pcf-http \
+#     --method GET \
+#     --url "/health" \
+#     --protocol HTTP
+#
+#   #Add monitor for https
+#   pynsxv_local lb add_monitor \
+#     -n $NSX_EDGE_GEN_NAME \
+#     --mon_name monitor-pcf-https \
+#     --method GET \
+#     --url "/health" \
+#     --protocol HTTPS
+#
+# # create lb pool
+# pynsxv_local lb add_pool -n $NSX_EDGE_GEN_NAME \
+#   --pool_name gortr-pool \
+#   --algorithm round-robin \
+#   --monitor monitor-pcf-http
+#
+# # add members to pool
+# pynsxv_local lb add_member \
+#   -n $NSX_EDGE_GEN_NAME \
+#   --pool_name gortr-pool \
+#   --member_name gortr-100 \
+#   --member 192.168.20.100 \
+#   --port 80 \
+#   --monitor_port 8080 \
+#   --weight 1
+#
+# pynsxv_local lb add_member \
+#   -n $NSX_EDGE_GEN_NAME \
+#   --pool_name gortr-pool \
+#   --member_name gortr-101 \
+#   --member 192.168.20.101 \
+#   --port 80 \
+#   --monitor_port 8080 \
+#   --weight 1
+#
+# pynsxv_local lb add_member \
+#   -n $NSX_EDGE_GEN_NAME \
+#   --pool_name gortr-pool \
+#   --member_name gortr-102 \
+#   --member 192.168.20.102 \
+#   --port 80 \
+#   --monitor_port 8080 \
+#   --weight 1
+#
+# # create app rules
+# pynsxv_local lb add_rule \
+#   -n $NSX_EDGE_GEN_NAME \
+#   -rn "option httplog" \
+#   -rs "option httplog"
+#
+# pynsxv_local lb add_rule \
+#   -n $NSX_EDGE_GEN_NAME \
+#   -rn "reqadd X-Forwarded-Proto:\ https" \
+#   -rs "reqadd X-Forwarded-Proto:\ https"
+#
+#   pynsxv_local lb add_rule \
+#     -n $NSX_EDGE_GEN_NAME \
+#     -rn "reqadd X-Forwarded-Proto:\ http" \
+#     -rs "reqadd X-Forwarded-Proto:\ http"
+#
+#
+# # create lb vip for http
+# pynsxv_local lb add_vip \
+#   -n $NSX_EDGE_GEN_NAME \
+#   --vip_name gortr-http \
+#   --pool_name gortr-pool \
+#   --profile_name pcf-http \
+#   --vip_ip $ESG_GO_ROUTER_UPLINK_IP_1  \
+#   --protocol HTTP \
+#   --port 80 \
+#   --rule_id "applicationRule-1" \
+#   --rule_id "applicationRule-3"
+#
+# #  create lb vip for https
+# pynsxv_local lb add_vip \
+#   -n $NSX_EDGE_GEN_NAME \
+#   --vip_name gortr-https \
+#   --pool_name gortr-pool \
+#   --profile_name pcf-https \
+#   --vip_ip $ESG_GO_ROUTER_UPLINK_IP_1  \
+#   --protocol HTTPS \
+#   --port 443 \
+#   --rule_id "applicationRule-1" \
+#   --rule_id "applicationRule-2"
