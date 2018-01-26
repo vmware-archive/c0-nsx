@@ -70,6 +70,8 @@ def add_app_profile(client_session, esg_name, prof_name, template, persistence=N
 
     app_prof = client_session.extract_resource_body_example('applicationProfiles', 'create')
 
+    print app_prof
+
     if cert_name is not None:
         cert_id, cert_params = get_certificate(client_session, esg_name, cert_name)
         if not cert_id:
