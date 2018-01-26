@@ -191,9 +191,10 @@ def get_certificate(client_session, edge_name, cert_name):
     edge_id, edge_params = get_edge(client_session, edge_name)
     all_certs = client_session.read('certificateScope', uri_parameters={"scopeId": edge_id})['body']['certificates']['certificate']
 
+    print type(all_certs)
     if type(all_certs) == type(dict()):
         print "Dictionary"
-    else if type(all_certs) == type(list()):
+    elif type(all_certs) == type(list()):
         print "List"
 
     try:
