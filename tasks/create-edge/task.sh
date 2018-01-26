@@ -74,7 +74,7 @@ get_cidr() {
 # Configure nat
 pynsxv_local nat add_snat \
   -n $NSX_EDGE_GEN_NAME \
-  -s '192.168.0.0/16'
+  -s '192.168.0.0/16' \
   -ts $ESG_SNAT_UPLINK_IP_1
 
 pynsxv_local esg routing_ospf -n $NSX_EDGE_GEN_NAME \
