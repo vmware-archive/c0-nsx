@@ -72,6 +72,7 @@ get_cidr() {
 # pynsxv_local esg set_fw_status -n $NSX_EDGE_GEN_NAME --fw_default accept
 
 # Configure nat
+pynsxv_local nat -h
 pynsxv_local nat add_snat \
   -n $NSX_EDGE_GEN_NAME \
   -s '192.168.0.0/16' \
