@@ -142,7 +142,6 @@ def get_logical_switch(client_session, logical_switch_name):
 
 def get_mo_by_name(content, searchedname, vim_type):
     mo_dict = get_all_objs(content, vim_type)
-    print mo_dict
     for obj in mo_dict:
         if obj.name == searchedname:
             return obj
@@ -153,7 +152,6 @@ def get_all_objs(content, vimtype):
     obj = {}
     container = content.viewManager.CreateContainerView(content.rootFolder, vimtype, True)
 
-    print container.view
     for managed_object_ref in container.view:
         obj.update({managed_object_ref: managed_object_ref.name})
     container.Destroy()
