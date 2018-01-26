@@ -191,19 +191,17 @@ def get_certificate(client_session, edge_name, cert_name):
     edge_id, edge_params = get_edge(client_session, edge_name)
     all_certs = client_session.read('certificateScope', uri_parameters={"scopeId": edge_id})['body']['certificates']['certificate']
 
-    print type(all_certs)
     if type(all_certs) == type(dict()):
-        print "Dictionary"
+        if all_certs['name'] == cert_name:
+            return all_certs['objectId'], all_certs
     elif type(all_certs) == type(list()):
-        print "List"
+        try:
+            cert_params = [scope for scope in all_certs if scope['name'] == cert_name][0]
+            cert_id = cert_params['objectId']
+        except IndexError:
+            return None, None
 
-    try:
-        cert_params = [scope for scope in all_certs if scope['name'] == cert_name][0]
-        cert_id = cert_params['objectId']
-    except IndexError:
-        return None, None
-
-    return cert_id, cert_params
+        return cert_id, cert_params
 
 def get_edge(client_session, edge_name):
     """
