@@ -10,7 +10,7 @@ from argparse import RawTextHelpFormatter
 from pkg_resources import resource_filename
 
 
-def add_snat_rule(client_session, esg_name, source, translated_source):
+def add_nat_rule(client_session, esg_name, nat_type, original_ip, translated_ip):
     """
     This function adds an Load Balancer Application profile to an ESG
 
@@ -18,11 +18,11 @@ def add_snat_rule(client_session, esg_name, source, translated_source):
     :param client_session: A nsxramlclient session Object
     :type esg_name: str
     :param esg_name: The display name of a Edge Service Gateway used for Load Balancing
-    :type source: str
-    :param source: Source IP Address
-    :type translated_source: str
-    :param translated_source: Translated Source IP Address
-    :return: Returns the Object Id of the newly created SNAT Rule and None if the ESG was
+    :type original_ip: str
+    :param original_ip: Original IP Address
+    :type translated_ip: str
+    :param translated_ip: Translated IP Address
+    :return: Returns the Object Id of the newly created NAT Rule and None if the ESG was
              not found in NSX
     :rtype: str
     """
@@ -41,10 +41,10 @@ def add_snat_rule(client_session, esg_name, source, translated_source):
     nat_dict['natRules']['natRule']['protocol'] = 'tcp'
     nat_dict['natRules']['natRule']['description'] = ''
     nat_dict['natRules']['natRule']['loggingEnabled'] = 'false'
-    nat_dict['natRules']['natRule']['translatedAddress'] = translated_source
+    nat_dict['natRules']['natRule']['translatedAddress'] = translated_ip
     nat_dict['natRules']['natRule']['enabled'] = 'true'
-    nat_dict['natRules']['natRule']['originalAddress'] = source
-    nat_dict['natRules']['natRule']['action'] = 'snat'
+    nat_dict['natRules']['natRule']['originalAddress'] = original_ip
+    nat_dict['natRules']['natRule']['action'] = nat_type
 
     result = client_session.create('edgeNatRules', uri_parameters={'edgeId': esg_id},
                                    request_body_dict=nat_dict)
@@ -54,19 +54,19 @@ def add_snat_rule(client_session, esg_name, source, translated_source):
         print result
         return result['objectId']
 
-def _add_snat_rule(client_session, **kwargs):
-    needed_params = ['esg_name', 'source', 'translated_source']
+def _add_nat_rule(client_session, **kwargs):
+    needed_params = ['esg_name', 'nat_type', 'original_ip', 'translated_ip']
     if not check_for_parameters(needed_params, kwargs):
         return None
 
-    result = add_snat_rule(client_session, kwargs['esg_name'], kwargs['source'], kwargs['translated_source'])
+    result = add_nat_rule(client_session, kwargs['esg_name'], kwargs['nat_type'], kwargs['original_ip'], kwargs['translated_ip'])
 
     if result and kwargs['verbose']:
         print result
     elif result:
-        print 'SNAT Rule created for {}'.format(result, kwargs['esg_name'])
+        print 'NAT Rule created for {}'.format(result, kwargs['esg_name'])
     else:
-        print 'SNAT Rule creation failed for {}'.format(kwargs['esg_name'])
+        print 'NAT Rule creation failed for {}'.format(kwargs['esg_name'])
 
 def contruct_parser(subparsers):
     parser = subparsers.add_parser('nat', description="Functions for NAT",
@@ -74,18 +74,21 @@ def contruct_parser(subparsers):
                                    formatter_class=RawTextHelpFormatter)
 
     parser.add_argument("command", help="""
-    add_snat: create a new SNAT Rule
+    add_nat: create a new NAT Rule
     """)
 
     parser.add_argument("-n",
                         "--esg_name",
                         help="Edge Name")
-    parser.add_argument("-s",
-                        "--source",
-                        help="Source IP Address")
-    parser.add_argument("-ts",
-                        "--translated_source",
-                        help="Translated Source IP Address")
+    parser.add_argument("-t",
+                        "--nat_type",
+                        help="Type of NAT Rule (SNAT or DNAT)")
+    parser.add_argument("-o",
+                        "--original_ip",
+                        help="Original IP Address")
+    parser.add_argument("-tip",
+                        "--translated_IP",
+                        help="Translated IP Address")
 
     parser.set_defaults(func=_nat_main)
 
@@ -109,18 +112,11 @@ def _nat_main(args):
                                config.get('nsxv', 'nsx_username'), config.get('nsxv', 'nsx_password'), debug=debug)
 
     try:
-        print 'command is {}'.format(args.command)
         command_selector = {
-            'add_snat': _add_snat_rule,
+            'add_nat': _add_nat_rule,
             }
-        print command_selector['add_snat']
-        print command_selector[args.command.strip()]
-        print args.esg_name
-        print args.source
-        print args.translated_source
-        print args.verbose
-        command_selector[args.command](client_session, esg_name=args.esg_name, source=args.source,
-                                       translated_source=args.translated_source, verbose=args.verbose)
+        command_selector[args.command](client_session, esg_name=args.esg_name, original_ip=args.original_ip,
+                                       translated_ip=args.translated_ip, verbose=args.verbose, nat_type=args.nat_type)
     except KeyError:
         print('Unknown command')
 

@@ -72,11 +72,17 @@ get_cidr() {
 # pynsxv_local esg set_fw_status -n $NSX_EDGE_GEN_NAME --fw_default accept
 
 # Configure nat
-pynsxv_local nat -h
-pynsxv_local nat add_snat \
+pynsxv_local nat add_nat \
   -n $NSX_EDGE_GEN_NAME \
-  -s '192.168.0.0/16' \
-  -ts $ESG_SNAT_UPLINK_IP_1
+  -t snat
+  -o '192.168.0.0/16' \
+  -tip $ESG_SNAT_UPLINK_IP_1
+
+pynsxv_local nat add_nat \
+  -n $NSX_EDGE_GEN_NAME \
+  -t dnat
+  -o $ESG_OPSMGR_UPLINK_IP_1 \
+  -tip '192.168.10.10'
 
 # pynsxv_local esg routing_ospf -n $NSX_EDGE_GEN_NAME \
 #   --vnic_ip $ESG_DEFAULT_UPLINK_IP_1 \
