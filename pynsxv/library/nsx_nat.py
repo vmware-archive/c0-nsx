@@ -113,6 +113,7 @@ def _nat_main(args):
         command_selector = {
             'add_snat': _add_snat_rule,
             }
+        print command_selector
         command_selector[args.command](client_session, esg_name=args.esg_name, source=args.source,
                                        translated_source=args.translated_source, verbose=args.verbose)
     except KeyError:
