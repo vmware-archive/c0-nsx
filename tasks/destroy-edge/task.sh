@@ -34,6 +34,12 @@ get_cidr() {
   echo "$FIRST_THREE.0/$MASK"
 }
 
+if [ $NUM_LOGICAL_SWITCHES > 9 || $NUM_LOGICAL_SWITCHES < 1 ]
+then
+  echo 'Number must be between 1 and 9'
+  exit 1
+fi
+
 # Create an edge
 pynsxv_local esg delete -n $NSX_EDGE_GEN_NAME
 
