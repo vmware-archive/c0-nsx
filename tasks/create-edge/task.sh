@@ -77,7 +77,7 @@ pynsxv_local nat add_snat \
   -s '192.168.0.0/16' \
   -ts $ESG_SNAT_UPLINK_IP_1
 
-pynsxv_local esg routing_ospf -n $NSX_EDGE_GEN_NAME \
+# pynsxv_local esg routing_ospf -n $NSX_EDGE_GEN_NAME \
 #   --vnic_ip $ESG_DEFAULT_UPLINK_IP_1 \
 #   -area 3505 -auth_type md5 -auth_value ospfarea3505
 #
