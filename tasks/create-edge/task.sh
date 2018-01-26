@@ -100,14 +100,14 @@ pynsxv_local lb enable_lb -n $NSX_EDGE_GEN_NAME
 # Create lb app profile for http
 pynsxv_local lb add_profile \
   -n $NSX_EDGE_GEN_NAME \
-  --profile_name pcf-http \
+  --profile_name PCF-HTTP \
   --protocol HTTP \
   -x true
 
   # Create lb app profile for https
   pynsxv_local lb add_profile \
     -n $NSX_EDGE_GEN_NAME \
-    --profile_name pcf-https \
+    --profile_name PCF-HTTPS \
     --protocol HTTPS \
     -x true \
     -cert "$ERT_SSL_CERT_CN"
@@ -115,7 +115,7 @@ pynsxv_local lb add_profile \
   #Add monitor for http
   pynsxv_local lb add_monitor \
     -n $NSX_EDGE_GEN_NAME \
-    --mon_name monitor-pcf-http \
+    --mon_name http-routers \
     --method GET \
     --url "/health" \
     --protocol HTTP
@@ -123,21 +123,21 @@ pynsxv_local lb add_profile \
   #Add monitor for https
   pynsxv_local lb add_monitor \
     -n $NSX_EDGE_GEN_NAME \
-    --mon_name monitor-pcf-https \
+    --mon_name https-routers \
     --method GET \
     --url "/health" \
     --protocol HTTPS
 
 # create lb pool
 pynsxv_local lb add_pool -n $NSX_EDGE_GEN_NAME \
-  --pool_name gortr-pool \
+  --pool_name http-routers \
   --algorithm round-robin \
-  --monitor monitor-pcf-http
+  --monitor http-routers
 
 # add members to pool
 pynsxv_local lb add_member \
   -n $NSX_EDGE_GEN_NAME \
-  --pool_name gortr-pool \
+  --pool_name http-routers \
   --member_name gortr-100 \
   --member 192.168.20.100 \
   --port 80 \
@@ -146,7 +146,7 @@ pynsxv_local lb add_member \
 
 pynsxv_local lb add_member \
   -n $NSX_EDGE_GEN_NAME \
-  --pool_name gortr-pool \
+  --pool_name http-routers \
   --member_name gortr-101 \
   --member 192.168.20.101 \
   --port 80 \
@@ -155,7 +155,7 @@ pynsxv_local lb add_member \
 
 pynsxv_local lb add_member \
   -n $NSX_EDGE_GEN_NAME \
-  --pool_name gortr-pool \
+  --pool_name http-routers \
   --member_name gortr-102 \
   --member 192.168.20.102 \
   --port 80 \
@@ -182,9 +182,9 @@ pynsxv_local lb add_rule \
 # create lb vip for http
 pynsxv_local lb add_vip \
   -n $NSX_EDGE_GEN_NAME \
-  --vip_name gortr-http \
-  --pool_name gortr-pool \
-  --profile_name pcf-http \
+  --vip_name GoRtr-HTTP \
+  --pool_name http-routers \
+  --profile_name PCF-HTTP \
   --vip_ip $ESG_GO_ROUTER_UPLINK_IP_1  \
   --protocol HTTP \
   --port 80 \
@@ -194,9 +194,9 @@ pynsxv_local lb add_vip \
 # create lb vip for https
 pynsxv_local lb add_vip \
   -n $NSX_EDGE_GEN_NAME \
-  --vip_name gortr-https \
-  --pool_name gortr-pool \
-  --profile_name pcf-https \
+  --vip_name GoRtr-HTTPS \
+  --pool_name http-routers \
+  --profile_name PCF-HTTPS \
   --vip_ip $ESG_GO_ROUTER_UPLINK_IP_1  \
   --protocol HTTPS \
   --port 443 \

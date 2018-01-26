@@ -38,7 +38,7 @@ def add_nat_rule(client_session, esg_name, nat_type, original_ip, translated_ip)
     del nat_dict['natRules']['natRule']['originalPort']
 
     nat_dict['natRules']['natRule']['vnic'] = '0'
-    nat_dict['natRules']['natRule']['protocol'] = 'tcp'
+    nat_dict['natRules']['natRule']['protocol'] = 'any'
     nat_dict['natRules']['natRule']['description'] = ''
     nat_dict['natRules']['natRule']['loggingEnabled'] = 'false'
     nat_dict['natRules']['natRule']['translatedAddress'] = translated_ip
