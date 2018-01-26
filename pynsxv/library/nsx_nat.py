@@ -87,7 +87,7 @@ def contruct_parser(subparsers):
                         "--original_ip",
                         help="Original IP Address")
     parser.add_argument("-tip",
-                        "--translated_IP",
+                        "--translated_ip",
                         help="Translated IP Address")
 
     parser.set_defaults(func=_nat_main)
