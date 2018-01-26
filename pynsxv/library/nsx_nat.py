@@ -33,7 +33,8 @@ def add_snat_rule(client_session, esg_name, source, translated_source):
 
     print '2'
     nat_dict = client_session.extract_resource_body_example('edgeNatRules', 'create')
-
+    print '2.5'
+    print nat_dict
     del nat_dict['natRule']['dnatMatchSourceAddress']
     del nat_dict['natRule']['translatedPort']
     del nat_dict['natRule']['originalPort']
