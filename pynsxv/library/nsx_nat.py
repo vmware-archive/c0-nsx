@@ -75,7 +75,6 @@ def contruct_parser(subparsers):
 
     parser.add_argument("command", help="""
     add_snat: create a new SNAT Rule
-    add_dnat: create a new DNAT Rule
     """)
 
     parser.add_argument("-n",
