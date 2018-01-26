@@ -39,5 +39,5 @@ pynsxv_local esg delete -n $NSX_EDGE_GEN_NAME
 
 # Create logical switches
 for labwire_id in $(seq $NUM_LOGICAL_SWITCHES); do
-  pynsxv_local lswitch -n "labwire-proto-0$labwire_id" delete
+  pynsxv_local lswitch -n "labwire-$NSX_EDGE_GEN_NAME-$OWNER_NAME-$labwire_id" delete
 done
