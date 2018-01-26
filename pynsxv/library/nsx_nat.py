@@ -109,6 +109,7 @@ def _nat_main(args):
                                config.get('nsxv', 'nsx_username'), config.get('nsxv', 'nsx_password'), debug=debug)
 
     try:
+        print 'command is {}'.format(args.command)
         command_selector = {
             'add_snat': _add_snat_rule
             }
