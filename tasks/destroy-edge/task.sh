@@ -34,7 +34,7 @@ get_cidr() {
   echo "$FIRST_THREE.0/$MASK"
 }
 
-if [ $NUM_LOGICAL_SWITCHES > 9 || $NUM_LOGICAL_SWITCHES < 1 ]
+if [ $NUM_LOGICAL_SWITCHES -gt 9 -o $NUM_LOGICAL_SWITCHES -lt 1 ]
 then
   echo 'Number must be between 1 and 9'
   exit 1
