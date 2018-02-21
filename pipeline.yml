@@ -62,10 +62,16 @@ nsx_edge_params: &nsx-edge-params
   ESG_SNAT_UPLINK_IP_1: {{esg_snat_uplink_ip_1}}
 
 resources:
-- name: pynsxv
+- name: c0-nsx
   type: git
   source:
     uri: git@github.com:pivotal-cf/c0-nsx.git
+    branch: opinionated_pez
+    private_key: {{git_private_key}}
+- name: pynsxv
+  type: git
+  source:
+    uri: git@github.com:pivotalservices/pynsxv.git
     branch: opinionated_pez
     private_key: {{git_private_key}}
 
@@ -73,15 +79,17 @@ jobs:
 - name: create-edge
   plan:
   - aggregate:
+    - get: c0-nsx
     - get: pynsxv
   - task: create-edge
-    file: pynsxv/tasks/create-edge/task.yml
+    file: c0-nsx/tasks/create-edge/task.yml
     params: *nsx-edge-params
 
 - name: destroy-edge
   plan:
   - aggregate:
+    - get: c0-nsx
     - get: pynsxv
   - task: destroy-edge
-    file: pynsxv/tasks/destroy-edge/task.yml
+    file: c0-nsx/tasks/destroy-edge/task.yml
     params: *nsx-edge-params
