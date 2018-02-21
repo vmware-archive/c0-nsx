@@ -8,6 +8,7 @@ image_resource:
 
 inputs:
   - name: c0-nsx
+  - name: pynsxv
 
 run:
   path: c0-nsx/tasks/create-edge/task.sh
