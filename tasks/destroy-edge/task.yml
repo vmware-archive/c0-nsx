@@ -7,10 +7,10 @@ image_resource:
   source: {repository: czero/nsx-gen}
 
 inputs:
-  - name: pynsxv
+  - name: c0-nsx
 
 run:
-  path: pynsxv/tasks/destroy-edge/task.sh
+  path: c0-nsx/tasks/destroy-edge/task.sh
 
 params:
   VCENTER_HOST:
