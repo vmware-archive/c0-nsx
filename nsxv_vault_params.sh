@@ -46,7 +46,8 @@ secrets=(
   "esg_snat_uplink_ip_1"::"10.10.10.12"
   "esg_opsmgr_uplink_ip_1"::"10.10.10.11"
   "nsx_edge_gen_nsx_manager_transport_zone_clusters"::"Cluster-A,Cluster-B,Cluster-C"
-  "ssl_cert_cn":"my.domain.com"
+  # Certificate CN - has to match the CN in ssl_cert, including asterisks when applicable
+  "ssl_cert_cn"::"my.domain.com"
 
 )
 
